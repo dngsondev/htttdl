@@ -1,0 +1,202 @@
+{{#if results}}
+    <script>
+        let maCH, tenCH, diaChiCH, hinhAnhCH, moTaCH, kinhdo, vido
+        var arrStore = []
+    </script>
+  {{#each results}}
+    <script>
+
+        arrStore.push({
+            maCH: "{{this.maCH}}",
+            tenCH: "{{this.tenCH}}",
+            diaChiCH: "{{this.diachi}}",
+            kinhdo: "{{this.kinhdo}}",
+            vido: "{{this.vido}}",
+            hinhAnhCH: "{{this.hinhanh}}",
+            moTaCH: "{{this.mota}}"
+        })
+    </script>  
+  {{/each}}
+{{/if}}
+
+{{#if searchCH}}
+    <script>
+        var Store = []
+        let kdStore, vdStore
+        {{#each searchCH}}
+            Store.push({
+                tenCH: "{{this.tenCH}}",
+                diaChiCH: "{{this.diachi}}",
+                kdStore: "{{this.kinhdo}}",
+                vdStore: "{{this.vido}}",
+                hinhAnhCH: "{{this.hinhanh}}",
+                moTaCH: "{{this.mota}}"
+            })
+        {{/each}}
+        console.log(Store)
+    </script>
+{{/if}}
+
+    
+<div id="map" style="width:100%;height:800px;"></div>
+
+<!-- Modal HTML -->
+<div id="locationModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>THÊM CƠ SỞ MỚI</h2>
+    <form action="/map/addmarker" method="post" id="locationForm" enctype="multipart/form-data">
+      <label for="latitude">Kinh do:</label>
+      <input type="text" id="latitude" name="lat" readonly><br><br>
+      <label for="longitude">Vi do:</label>
+      <input type="text" id="longitude" name="lng" readonly><br><br>
+      <label for="description">Ten:</label>
+      <input type="text" id="nameCH" name="nameCH"><br><br>
+      <label for="description">Dia chi:</label>
+      <input type="text" id="addressCH" name="addressCH"><br><br>
+      <label for="description">Hinh anh:</label>
+      <input type="file" id="pictureCH" name="pictureCH"><br><br>
+      <label for="description">Mo ta:</label>
+      <input type="text" id="description" name="mota"><br><br>
+      <button type="submit" id="saveLocation">Save</button>
+    </form>
+  </div>
+</div>
+
+{{!-- <div id="ModalTK" class="modal">
+    <div class="modal-content">
+        <h1>Thống kê</h1>
+        <form action="/statistical?maCHHT={{maCHHT}}" method="post">
+            <div id="content" class="d-flex justify-content-around rounded-2">
+                <input type="text" name="maCHHT" id="maCHHienTai" value="">
+                <input type="date" name="ngaybatdau" id="ngaybatdau">
+                <input type="date" name="ngayketthuc" id="ngayketthuc">
+                <button type="submit" id="btnthongke">Tìm</button>
+            </div>
+        </form>
+        <div id="result" style="">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã hoá đơn</th>
+                        <th>Tên hoá đơn</th>
+                        <th>Mặt hàng bán</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <!-- Add more rows here if needed -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> --}}
+
+
+<style>
+/* General Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 400px;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    {{!-- background-color: rgba(0, 0, 0, 0.5); /* Slightly darker background */ --}}
+    overflow: hidden; /* Prevent content overflow outside of modal */
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 12px; /* Softer edges */
+    width: 30%; /* Smaller width */
+    max-height: 80vh; /* Limit the height to 80% of the viewport */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    position: relative; /* Make sure close button stays at the top-right */
+    transition: transform 0.3s ease-out; /* Smooth open animation */
+}
+
+/* Styling Close Button */
+.close {
+    color: #555;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+/* Input Field Styling */
+.modal-content form input[type="text"],
+.modal-content form input[type="file"],
+.modal-content form textarea {
+    width: 100%;
+    padding: 10px;
+    /*margin: 8px 0;*/
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: border 0.3s ease;
+}
+
+/* Focus effect on input fields */
+.modal-content form input:focus,
+.modal-content form textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Save Button */
+.modal-content form button[type="button"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content form button[type="button"]:hover {
+    background-color: #45a049;
+}
+
+/* Form Heading */
+.modal-content h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+/* Reduce modal width for smaller screens */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        width: 80%;
+    }
+}
+
+</style>

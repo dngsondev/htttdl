@@ -1,0 +1,46 @@
+<div class="container-fruid">
+    <div><a href="/">Trang chủ </a>
+        <span>
+            {{#if maCH}}
+                Cửa hàng số {{maCH}}
+            {{/if}}
+        </span>
+    </div>
+    <div class="d-flex ">
+        <div class="f-left w-25">
+            <div>Thống kê</div>
+        </div>
+        <div class="f-right">
+            <form action="/statistical/thongke" method="post">
+                <input type="date" name="ngaybatdau" id="">
+                <input type="date" name="ngayketthuc" id="">
+                <input type="submit" value="Tìm" name="" id="">
+            </form>
+            <table>
+                
+                <thead>
+                    <tr>
+                        <th>Mã hoá đơn</th>
+                        <th>Nhân viên</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày lập hoá đơn</th>
+                        <th>Hàng hoá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each tkcuahang}}
+                    <tr>
+                        <td>{{this.maCH}}</td>
+                        <td>{{this.maCH}}</td>
+                        <td>{{this.maCH}}</td>
+                        <td>{{this.maCH}}</td>
+                        <td>{{this.maCH}}</td>
+                        <td>{{this.maCH}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

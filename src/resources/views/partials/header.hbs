@@ -1,0 +1,51 @@
+<header>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-body">
+    <div class="container-fluid">
+      <button
+        data-mdb-collapse-init
+        class="navbar-toggler"
+        type="button"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarExample01">
+        <!-- Phần các mục chính như Home và Features -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item p-2 active">
+            <a class="nav-link" aria-current="page" href="#">
+              <img src="../../images/map.png"
+                class="" alt="Logo" style="width: 50px; height: auto;">
+            </a>
+          </li>
+          <li class="nav-item p-2 active">
+            <a class="nav-link" aria-current="page" href="/">Trang chủ</a>
+          </li>
+          <li class="nav-item p-2">
+            <a class="nav-link" href="#">Chỉnh sửa</a>
+          </li>
+          <li class="nav-item p-2">
+              <input class="mt-1 border-1 rounded" type="text" name="search" id="search">
+              <input type="submit" id="searchButton" value="Tìm" class="mt-1 border-1 rounded">
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Phần Đăng nhập/Đăng xuất nằm sát phải của màn hình với position-absolute -->
+      <ul class="navbar-nav position-absolute right-0 mb-2 mb-lg-0" style="right: 0;">
+        {{#if username}}
+          <li class="nav-item p-2">
+            <a class="nav-link d-inline" href="/profile">{{username}}</a>
+            <a class="nav-link d-inline" href="/login/logout">Đăng xuất</a>
+          </li>
+        {{/if}}
+      </ul>
+      
+    </div>
+  </nav>
+  <!-- Navbar -->
+</header>
