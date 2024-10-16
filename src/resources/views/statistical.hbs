@@ -1,6 +1,7 @@
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <a href="/" class="text-decoration-none text-success">Trang chủ</a>
+        <h2 style="fw-bold">Thống kê</h2>
         <span class="fw-bold">
             {{#if maCH}}
                 Cửa hàng số {{maCH}}
@@ -9,11 +10,7 @@
     </div>
     
     <div class="row">
-        <div class="col-md-2">
-            <h5>Thống kê</h5>
-        </div>
-
-        <div class="col-md-10">
+        <div class="col-md-12">
             <form action="/statistical" method="post" class="form-inline d-flex mb-3 align-items-end">
                 <div class="form-group me-3">
                     <label for="ngaybatdau" class="form-label">Ngày bắt đầu</label> &ensp;
@@ -27,7 +24,6 @@
                     <input type="submit" value="Tìm" class="btn btn-success">
                 </div>
             </form>
-
             <table class="table table-bordered table-hover">
                 <thead class="table-light">
                     <tr>
@@ -36,6 +32,7 @@
                         <th>Khách hàng</th>
                         <th>Ngày lập hoá đơn</th>
                         <th>Hàng hoá</th>
+                        <th>Số lượng</th>
                         <th>Thành tiền</th>
                     </tr>
                 </thead>
@@ -50,6 +47,7 @@
                         <td>{{this.maKH}}</td>
                         <td>{{this.ngaylapHD}}</td>
                         <td>{{this.tenHH}}</td>
+                        <td>{{this.slCTHD}}</td>
                         <td>{{this.giaHH}}</td>
                     </tr>
                     {{else}}

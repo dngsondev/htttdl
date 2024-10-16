@@ -6,7 +6,6 @@ const logoutControllers = require('../app/controllers/LogoutControllers')
 
 router.post('/auth', loginControllers.login)
 router.get('/logout', logoutControllers.logout)
-// router.use('/', loginControllers.index)
 
 
 module.exports = router

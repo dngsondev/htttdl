@@ -1,21 +1,26 @@
 // const lg = require('../models/loginAccounts')
 const accountsSes = require('../models/loginAccounts')
 class LoginControllers {
-    // index(req, res) {
-    //     // res.render('login')
 
-    //     if (req.session.loggedin) {
-    //         // Truyền username từ session vào view
-    //         // res.render('home', { username: 'Xin chao ' + req.session.username });
-    //         res.render('map');
-    //     } else {
-    //         res.render('login');
-    //     }
-
-    // }
-
-    login(req, res) {
-        accountsSes(req, res)
+    login(request, response) {
+        let username = request.body.username;
+        let password = request.body.password;
+        console.log(username, password);
+        if (username && password) {
+            accountsSes(username, password, function(error, results, fields) {
+                if (error) throw error;
+    
+                if (results.length > 0) {
+                    request.session.loggedin = true;
+                    request.session.username = username;
+    
+                    response.redirect('/');
+                } else {
+                    response.send('Incorrect Username and/or Password!');
+                }			
+                response.end();
+            })
+        }
     }
 }
 
