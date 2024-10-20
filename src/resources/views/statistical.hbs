@@ -1,10 +1,10 @@
-<div class="container-fluid mt-4">
+{{!-- <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <a href="/" class="text-decoration-none text-success">Trang chủ</a>
         <h2 style="fw-bold">Thống kê</h2>
         <span class="fw-bold">
-            {{#if maCH}}
-                Cửa hàng số {{maCH}}
+            {{#if tenCH}}
+                {{tenCH}}
             {{/if}}
         </span>
     </div>
@@ -16,18 +16,31 @@
                     <label for="ngaybatdau" class="form-label">Ngày bắt đầu</label> &ensp;
                     <input type="date" name="ngaybatdau" id="ngaybatdau" class="form-control">
                 </div>
+
                 <div class="form-group me-3">
                     <label for="ngayketthuc" class="form-label">Ngày kết thúc</label> &ensp;
                     <input type="date" name="ngayketthuc" id="ngayketthuc" class="form-control">
                 </div>
+
+                <div class="form-group me-3">
+                    <label for="theloai" class="form-label">Thể loại</label> &ensp;
+                    <select name="theloai" id="theloai" class="form-control">
+                        <option value="">-- Chọn thể loại --</option>
+                        <option value="1">Điện tử, điện máy</option>
+                        <option value="2">Điện gia dụng</option>
+                        <option value="3">Đồ gia dụng</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <input type="submit" value="Tìm" class="btn btn-success">
                 </div>
             </form>
+
+
             <table class="table table-bordered table-hover">
                 <thead class="table-light">
                     <tr>
-                        <th>Mã hoá đơn</th>
                         <th>Nhân viên</th>
                         <th>Khách hàng</th>
                         <th>Ngày lập hoá đơn</th>
@@ -37,22 +50,35 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     {{#each tkcuahang}}
-                    <script>
-                        console.log({{this.tenHH}})
-                    </script>
                     <tr>
-                        <td>{{this.soHD}}</td>
                         <td>{{this.tenNV}}</td>
                         <td>{{this.maKH}}</td>
-                        <td>{{this.ngaylapHD}}</td>
+
+                        <td>
+                            <script>
+                                var ngaylapHD = new Date('{{this.ngaylapHD}}');
+                                var day = ('0' + ngaylapHD.getDate()).slice(-2);
+                                var month = ('0' + (ngaylapHD.getMonth() + 1)).slice(-2);
+                                var year = ngaylapHD.getFullYear();
+                                document.write(day + '/' + month + '/' + year);
+                            </script>
+                        </td>
+
                         <td>{{this.tenHH}}</td>
                         <td>{{this.slCTHD}}</td>
-                        <td>{{this.giaHH}}</td>
+                        <td>
+                            <script>
+                                var giaHH = {{this.giaHH}} * {{this.slCTHD}};
+                                var formattedGiaHH = giaHH.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                                document.write(formattedGiaHH);
+                            </script>
+                        </td>
                     </tr>
                     {{else}}
                     <tr>
-                        <td colspan="6" class="text-center">Không có dữ liệu</td>
+                        <td colspan="7" class="text-center">Không có dữ liệu</td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -60,7 +86,6 @@
         </div>
     </div>
 </div>
-
 <style>
 .form-inline {
     display: flex;
@@ -80,4 +105,206 @@
     background-color: #28a745;
     border-color: #28a745;
 }
+
+/* Đặt khoảng cách giữa các nhóm nhập liệu */
+.form-group label {
+    font-weight: bold;
+}
+</style> --}}
+
+
+
+{{!-- ------------------------------------------------------------------------------------ --}}
+
+
+
+
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="/" class="text-decoration-none text-success">Trang chủ</a>
+        <h2 class="fw-bold">Thống kê</h2>
+        <span class="fw-bold">
+            {{#if tenCH}}
+                {{tenCH}}
+            {{/if}}
+        </span>
+    </div>
+
+    <div class="row">
+        <!-- Left Section: Options for statistics and inventory -->
+        <div class="col-md-2">
+            <div class="mb-4">
+                <h4>Lựa chọn hiển thị</h4>
+                <form>
+                    <div class="form-group mb-3">
+                        <label for="viewOption" class="form-label">Chọn loại dữ liệu</label>
+                        <select name="viewOption" id="viewOption" class="form-control" onchange="toggleDataView()">
+                            <option value="statistical">Thống kê</option>
+                            <option value="inventory">Hàng còn lại</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Section: Display data -->
+        <div class="col-md-10">
+            <!-- Form for Statistical Data -->
+            <form id="statisticalForm" action="/statistical" method="post" style="display: block;">
+                <div class="form-group mb-3">
+                    <label for="ngaybatdau" class="form-label">Ngày bắt đầu</label>
+                    <input type="date" name="ngaybatdau" id="ngaybatdau" class="form-control">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="ngayketthuc" class="form-label">Ngày kết thúc</label>
+                    <input type="date" name="ngayketthuc" id="ngayketthuc" class="form-control">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="theloai" class="form-label">Thể loại</label>
+                    <select name="theloai" id="theloai" class="form-control">
+                        <option value="">-- Chọn thể loại --</option>
+                        <option value="1">Điện tử, điện máy</option>
+                        <option value="2">Điện gia dụng</option>
+                        <option value="3">Đồ gia dụng</option>
+                    </select>
+                </div>
+                <input type="submit" value="Tìm Thống kê" class="btn btn-success w-100" id="submitButton">
+            </form>
+
+            <!-- Table for Statistical Data -->
+            <div id="statistical-table">
+                <h4>Kết quả thống kê</h4>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nhân viên</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày lập hoá đơn</th>
+                            <th>Hàng hoá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each tkcuahang}}
+                        <tr>
+                            <td>{{this.tenNV}}</td>
+                            <td>{{this.maKH}}</td>
+                            <td>
+                                <script>
+                                    var ngaylapHD = new Date('{{this.ngaylapHD}}');
+                                    var day = ('0' + ngaylapHD.getDate()).slice(-2);
+                                    var month = ('0' + (ngaylapHD.getMonth() + 1)).slice(-2);
+                                    var year = ngaylapHD.getFullYear();
+                                    document.write(day + '/' + month + '/' + year);
+                                </script>
+                            </td>
+                            <td>{{this.tenHH}}</td>
+                            <td>{{this.slCTHD}}</td>
+                            <td>
+                                <script>
+                                    var giaHH = {{this.giaHH}} * {{this.slCTHD}};
+                                    var formattedGiaHH = giaHH.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                                    document.write(formattedGiaHH);
+                                </script>
+                            </td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="6" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table for Inventory Data -->
+            <div id="inventory-table" style="display: none;">
+                <h4>Danh sách hàng còn lại</h4>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tên hàng hoá</th>
+                            <th>Thể loại</th>
+                            <th>Số lượng</th>
+                            <th>Giá/từng cái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each inventory}}
+                        <tr>
+                            <td>{{this.tenHH}}</td>
+                            <td>{{this.loaiHH}}</td>
+                            <td>{{this.soluong}}</td>
+                            <td>
+                                <script>
+                                    var price = {{this.sotien}}; // Ensure this is a number
+                                    console.log(price); // Check the value
+                                    var formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                                    document.write(formattedPrice);
+                                </script>
+                            </td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="4" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDataView() {
+        const viewOption = document.getElementById('viewOption').value;
+        const statisticalForm = document.getElementById('statisticalForm');
+        const statisticalTable = document.getElementById('statistical-table');
+        const inventoryTable = document.getElementById('inventory-table');
+
+        if (viewOption === 'statistical') {
+            statisticalForm.style.display = 'block';
+            statisticalTable.style.display = 'block';
+            inventoryTable.style.display = 'none';
+            document.getElementById('submitButton').style.display = 'block';
+        } else {
+            statisticalForm.style.display = 'none';
+            statisticalTable.style.display = 'none';
+            inventoryTable.style.display = 'block';
+            document.getElementById('submitButton').style.display = 'none'; // Hide the submit button for inventory
+        }
+    }
+
+    // Retain selection after reload
+    window.onload = function() {
+        const selectedView = new URLSearchParams(window.location.search).get('viewOption');
+        if (selectedView) {
+            document.getElementById('viewOption').value = selectedView;
+            toggleDataView();
+        }
+    };
+</script>
+
+<style>
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        margin-top: 10px;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
 </style>

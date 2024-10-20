@@ -44,14 +44,18 @@
               <div>Mô tả: ${storeInfo.moTaCH}</div>
             </div>
           </div>
-          <div class="row" style="display: flex; justify-content: center; gap: 45px; padding-top: 10px;">
-            <a href="/statistical?maCH=${storeInfo.maCH}" style="text-decoration: none;">Thống kê</a>
-            <button style="padding: 10px 12px; background-color: blue; color: white; border: none; border-radius: 2px; cursor: pointer;">
-              <a href="" style="text-decoration: none; color: white;">Chỉnh sửa</a>
-            </button>
-            <button style="padding: 10px 12px; background-color: red; color: white; border: none; border-radius: 2px; cursor: pointer;">
-              <a href="" style="text-decoration: none; color: white;">Xoá</a>
-            </button>
+          <div class="row" style="display: flex; justify-content: center; gap: 15px; padding-top: 10px;">
+            <!-- Nút Thống kê -->
+            <a href="/statistical?maCH=${storeInfo.maCH}&tenCH=${storeInfo.tenCH}" 
+              style="display: inline-block; padding: 10px 20px; background-color: #00b359; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-align: center; transition: background-color 0.3s;">Thống kê</a>
+        
+            <!-- Nút Chỉnh sửa -->
+            <a href="" 
+              style="display: inline-block; padding: 10px 20px; background-color: blue; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-align: center; transition: background-color 0.3s;">Chỉnh sửa</a>
+        
+            <!-- Nút Xoá -->
+            <a href="/map/delete?maCH=${storeInfo.maCH}" 
+              style="display: inline-block; padding: 10px 20px; background-color: red; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-align: center; transition: background-color 0.3s;">Xoá</a>
           </div>
         `;
 

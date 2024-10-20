@@ -1,5 +1,6 @@
 const addMarker = require('../models/addMarker')
 const getStores = require('../models/getStores')
+const deleteMarker = require('../models/deleteMarker')
 
 const multer = require('multer');
 const path = require('path');
@@ -61,6 +62,17 @@ class MapContollers {
                 response.send('Please enter all required information!');
             }
         });
+    }
+    
+    deleteMarker(request,response){
+        let maCH = request.query.maCH
+        console.log(maCH)
+        if (maCH) {
+            deleteMarker(maCH, function(error, results, fields) {
+                if (error) throw error;
+                response.redirect('/');			
+            })
+        }
     }
 
 }

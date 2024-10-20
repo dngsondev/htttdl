@@ -8,7 +8,7 @@ function route(app){
 
     app.use('/map', mapRouter)
 
-    app.use('/login', loginRouter)
+    app.use('/auth', loginRouter)
 
     app.use('/', (req, res) => {
         if (req.session.loggedin) {
