@@ -22,13 +22,16 @@
                 class="" alt="Logo" style="width: 50px; height: auto;">
             </a>
           </li>
-          <li class="nav-item p-2 active">
+          {{!-- <li class="nav-item p-2 active">
             <a class="nav-link" aria-current="page" href="/">Trang chủ</a>
-          </li>
+          </li> --}}
           <li class="nav-item p-2">
-              <input class="mt-1 border-1 rounded" type="text" name="search" id="search">
-              <input type="submit" id="searchButton" value="Tìm" class="mt-1 border-1 rounded">
+              <input class="mt-1 border-1 rounded" type="text" name="search" id="search" oninput="showSuggestions()" autocomplete="off">
+              <input type="submit" id="searchButton" value="Tìm" class="mt-1 border-1 rounded" onclick="searchStore(); return false;">
+              <div id="suggestions" style="border: 1px solid #ccc; display: none; position: absolute; z-index: 1000; background-color: white;"></div>
           </li>
+
+
         </ul>
       </div>
       
@@ -46,3 +49,21 @@
   </nav>
   <!-- Navbar -->
 </header>
+<style>
+  #suggestions {
+    border: 1px solid #ccc; /* Đường viền */
+    background-color: white; /* Màu nền */
+    z-index: 1000; /* Đảm bảo gợi ý nằm trên các phần tử khác */
+    max-height: 200px; /* Chiều cao tối đa của gợi ý */
+    overflow-y: auto; /* Thêm thanh cuộn nếu gợi ý quá nhiều */
+}
+
+#suggestions div {
+    padding: 8px; /* Khoảng cách bên trong */
+    cursor: pointer; /* Con trỏ khi di chuột */
+}
+
+#suggestions div:hover {
+    background-color: #f0f0f0; /* Đổi màu khi hover */
+}
+</style>

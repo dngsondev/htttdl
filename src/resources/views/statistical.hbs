@@ -235,7 +235,7 @@
                         {{#each inventory}}
                         <tr>
                             <td>{{this.tenHH}}</td>
-                            <td>{{this.loaiHH}}</td>
+                            <td>{{this.theloai}}</td>
                             <td>{{this.soluong}}</td>
                             <td>
                                 <script>
@@ -256,8 +256,12 @@
             </div>
         </div>
     </div>
-</div>
+    {{#if tkcuahang}}
+        <canvas id="statisticalChart" width="400" height="200"></canvas>
+    {{/if}}
 
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     function toggleDataView() {
         const viewOption = document.getElementById('viewOption').value;
@@ -286,6 +290,62 @@
             toggleDataView();
         }
     };
+
+    // Example data: Replace this with dynamic data from your server
+const labels = []; // Array to store dates, e.g., ['01/10/2024', '02/10/2024', '03/10/2024', ...]
+const dataPoints = []; // Array to store total sales, e.g., [500000, 300000, 400000, ...]
+
+{{#each tkcuahang}}
+    labels.push("{{this.ngaylapHD}}");
+    dataPoints.push({{this.giaHH}} * {{this.slCTHD}});
+{{/each}}
+
+// Format the dates (if needed)
+const formattedLabels = labels.map(date => {
+    const d = new Date(date);
+    return `${('0' + d.getDate()).slice(-2)}/${('0' + (d.getMonth() + 1)).slice(-2)}/${d.getFullYear()}`;
+});
+
+// Create the chart
+const ctx = document.getElementById('statisticalChart').getContext('2d');
+const statisticalChart = new Chart(ctx, {
+    type: 'bar', // You can change this to 'line', 'pie', etc.
+    data: {
+        labels: formattedLabels, // Dates as labels
+        datasets: [{
+            label: 'Doanh Thu (VND)',
+            data: dataPoints, // Corresponding sales data
+            backgroundColor: 'rgba(54, 162, 235, 0.5)', // Bar color
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Thống Kê Doanh Thu' // Tiêu đề của biểu đồ
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Ngày lập hoá đơn'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Doanh Thu (VND)'
+                },
+                beginAtZero: true
+            }
+        }
+    }
+});
+
 </script>
 
 <style>

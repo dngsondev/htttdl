@@ -45,24 +45,29 @@
             </div>
           </div>
           <div class="row" style="display: flex; justify-content: center; gap: 15px; padding-top: 10px;">
-            <!-- Nút Thống kê -->
             <a href="/statistical?maCH=${storeInfo.maCH}&tenCH=${storeInfo.tenCH}" 
-              style="display: inline-block; padding: 10px 20px; background-color: #00b359; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-align: center; transition: background-color 0.3s;">Thống kê</a>
-        
-            <!-- Nút Chỉnh sửa -->
-            <a href="" 
-              style="display: inline-block; padding: 10px 20px; background-color: blue; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-align: center; transition: background-color 0.3s;">Chỉnh sửa</a>
-        
-            <!-- Nút Xoá -->
+              style="padding: 10px 20px; background-color: #00b359; color: white; border-radius: 5px;">Thống kê</a>
+            <button id="editButton" style="padding: 10px 20px; background-color: blue; color: white; border-radius: 5px; border: none;">Chỉnh sửa</button>
             <a href="/map/delete?maCH=${storeInfo.maCH}" 
-              style="display: inline-block; padding: 10px 20px; background-color: red; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; text-align: center; transition: background-color 0.3s;">Xoá</a>
+              style="padding: 10px 20px; background-color: red; color: white; border-radius: 5px;">Xoá</a>
           </div>
         `;
-
-        // Đặt nội dung và mở InfoWindow
+      
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
+      
+        // Trì hoãn gán sự kiện để đảm bảo phần tử đã có trong DOM
+        setTimeout(function() {
+          var editButton = document.getElementById('editButton');
+          if (editButton) {
+            editButton.addEventListener('click', function() {
+              openEditModal(storeInfo);
+            });
+          }
+        }, 100); // Trì hoãn 100ms
       }
+      
+
     
       // Nếu open === true, mở InfoWindow ngay lập tức
       if (open) {
@@ -72,6 +77,43 @@
       // Thêm sự kiện 'click' để mở InfoWindow khi người dùng nhấp vào marker
       google.maps.event.addListener(marker, 'click', showInfoWindow);
     }
+
+    // Hàm mở modal chỉnh sửa
+    function openEditModal(storeInfo) {
+      var editModal = document.getElementById('editModal');
+      editModal.style.display = "block";
+
+
+      // Điền thông tin của cửa hàng vào các trường input
+      document.getElementById('editmaCH').value = storeInfo.maCH;
+      document.getElementById('editNameCH').value = storeInfo.tenCH;
+      document.getElementById('editAddressCH').value = storeInfo.diaChiCH;
+      document.getElementById('editLatitude').value = storeInfo.kinhdo;
+      document.getElementById('editLongitude').value = storeInfo.vido;
+      console.log(storeInfo.hinhAnhCH)
+      document.getElementById('tenPic').value = storeInfo.hinhAnhCH;
+      document.getElementById('editDescription').value = storeInfo.moTaCH;
+
+      // Khi người dùng nhấn nút lưu, cập nhật thông tin cửa hàng
+      document.getElementById('saveEdit').onclick = function() {
+        editModal.style.display = "none";
+      };
+    }
+
+    // Đóng modal khi nhấn vào nút đóng
+    var closeEditButton = document.getElementsByClassName("closeEdit")[0];
+    closeEditButton.onclick = function() {
+      document.getElementById('editModal').style.display = "none";
+    };
+    
+
+    // Đóng modal khi nhấn ra ngoài modal
+    window.onclick = function(event) {
+      if (event.target == document.getElementById('editModal')) {
+        document.getElementById('editModal').style.display = "none";
+      }
+    };
+
 
     // Thêm sự kiện click vào bản đồ
     google.maps.event.addListener(map, 'click', function(event) {
@@ -114,27 +156,66 @@
     });
 
     // Hàm tìm kiếm cửa hàng
-    function searchStore() {
-      if (Array.isArray(arrStore) && arrStore.length > 0) {
-        var searchTerm = document.getElementById('search').value.toLowerCase();
-        // console.log(searchTerm);
-
-        // Tìm kiếm dựa trên maCH hoặc tenCH
-        var CH = arrStore.find(store => 
-          store.maCH.toLowerCase() === searchTerm || 
-          store.tenCH.toLowerCase() === searchTerm
-        );
-
-        if (CH) {
-          console.log("Tọa độ tìm thấy:", CH.kinhdo, CH.vido);
-          updateMapLocation(CH.kinhdo, CH.vido, CH);
+    function searchStore(selectedStore) {
+        if (selectedStore) {
+            // Nếu có cửa hàng được chọn từ gợi ý
+            var CH = arrStore.find(store => store.tenCH === selectedStore.tenCH);
+            if (CH) {
+                console.log("Tọa độ tìm thấy:", CH.kinhdo, CH.vido);
+                updateMapLocation(CH.kinhdo, CH.vido, CH);
+            }
         } else {
-          alert('Cửa hàng không tìm thấy');
+            // Nếu không có cửa hàng được chọn từ gợi ý, thực hiện tìm kiếm
+            if (Array.isArray(arrStore) && arrStore.length > 0) {
+                var searchTerm = document.getElementById('search').value.toLowerCase();
+
+                // Tìm kiếm dựa trên maCH hoặc tenCH có chứa searchTerm
+                var CH = arrStore.find(store => 
+                    store.maCH.toLowerCase() === searchTerm || 
+                    store.tenCH.toLowerCase().includes(searchTerm)
+                );
+
+                if (CH) {
+                    console.log("Tọa độ tìm thấy:", CH.kinhdo, CH.vido);
+                    updateMapLocation(CH.kinhdo, CH.vido, CH);
+                } else {
+                    alert('Cửa hàng không tìm thấy');
+                }
+            }
         }
-      }
     }
 
-
+    window.showSuggestions = function() {
+      var searchTerm = document.getElementById('search').value.toLowerCase();
+      var suggestionsDiv = document.getElementById('suggestions');
+      suggestionsDiv.innerHTML = ''; // Xóa gợi ý cũ
+      suggestionsDiv.style.display = 'none'; // Ẩn gợi ý
+    
+      if (searchTerm) {
+        // Tìm các cửa hàng phù hợp
+        var matchedStores = arrStore.filter(store => 
+          store.tenCH.toLowerCase().includes(searchTerm)
+        );
+    
+        if (matchedStores.length > 0) {
+          matchedStores.forEach(store => {
+            var suggestionItem = document.createElement('div');
+            // Hiển thị cả tên cửa hàng và địa chỉ
+            suggestionItem.innerText = store.tenCH + ' - ' + store.diaChiCH;
+            suggestionItem.onclick = function() {
+              // Cập nhật ô tìm kiếm với tên cửa hàng và địa chỉ
+              document.getElementById('search').value = store.tenCH + ' - ' + store.diaChiCH;
+              searchStore(store); // Tìm cửa hàng đã chọn
+              suggestionsDiv.innerHTML = ''; // Xóa gợi ý
+              suggestionsDiv.style.display = 'none'; // Ẩn gợi ý
+            };
+            suggestionsDiv.appendChild(suggestionItem);
+          });
+          suggestionsDiv.style.display = 'block'; // Hiển thị gợi ý
+        }
+      }
+    };
+    
     // Cập nhật vị trí bản đồ
     function updateMapLocation(lat, lng, storeInfo) {
       var newLocation = new google.maps.LatLng(lat, lng);

@@ -1,7 +1,7 @@
 const addMarker = require('../models/addMarker')
 const getStores = require('../models/getStores')
 const deleteMarker = require('../models/deleteMarker')
-
+const updateMarker = require('../models/updateMarker')
 const multer = require('multer');
 const path = require('path');
 
@@ -60,6 +60,40 @@ class MapContollers {
                 });
             } else {
                 response.send('Please enter all required information!');
+            }
+        });
+    }
+    
+    updateMarker(request, response) {
+        upload.single('hinhAnhCH')(request, response, function (err) {
+            
+            let maCH = request.body.maCH; 
+            let name = request.body.nameCH; 
+            let address = request.body.addressCH; 
+            let description = request.body.mota; 
+            // let currentImage = request.body.hinhAnhCH; 
+            let imageOld = request.body.oldPic; 
+            
+            if (err) {
+                console.error('error:', err);
+                return response.status(500).send('Error uploading file.');
+            }
+    
+            // Determine the new image filename
+            let newImage = request.file ? request.file.filename : imageOld;
+            
+            console.log('maCH:', maCH, 'name:', name, 'address:', address, 'description:', description, 'image:', newImage);
+            
+            if (maCH) {
+                // Call updateMarker function with the new values
+                updateMarker(name, address, newImage, description, maCH, function (error, results) {
+                    if (error) {
+                        console.error('Database update error:', error);
+                    }
+                    response.redirect('/');
+                });
+            } else {
+                response.send('Khong thay maCH.');
             }
         });
     }

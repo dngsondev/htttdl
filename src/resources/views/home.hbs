@@ -63,46 +63,77 @@
   </div>
 </div>
 
-{{!-- <div id="ModalTK" class="modal">
-    <div class="modal-content">
-        <h1>Thống kê</h1>
-        <form action="/statistical?maCHHT={{maCHHT}}" method="post">
-            <div id="content" class="d-flex justify-content-around rounded-2">
-                <input type="text" name="maCHHT" id="maCHHienTai" value="">
-                <input type="date" name="ngaybatdau" id="ngaybatdau">
-                <input type="date" name="ngayketthuc" id="ngayketthuc">
-                <button type="submit" id="btnthongke">Tìm</button>
-            </div>
-        </form>
-        <div id="result" style="">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mã hoá đơn</th>
-                        <th>Tên hoá đơn</th>
-                        <th>Mặt hàng bán</th>
-                        <th>Số lượng</th>
-                        <th>Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <!-- Add more rows here if needed -->
-                </tbody>
-            </table>
+<!-- Modal chỉnh sửa thông tin cửa hàng -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="closeEdit">&times;</span>
+    <h2>Chỉnh sửa Cửa Hàng</h2>
+    <form id="editForm" method="post" action="/map/update" enctype="multipart/form-data">
+      <input type="text" name="maCH" id="editmaCH" hidden>
+      <label for="editNameCH">Tên cửa hàng:</label>
+      <input type="text" id="editNameCH" name="nameCH"><br><br>
+      <label for="editAddressCH">Địa chỉ:</label>
+      <input type="text" id="editAddressCH" name="addressCH"><br><br>
+      <label for="editLatitude">Kinh độ:</label>
+      <input type="text" id="editLatitude" name="lat" readonly><br><br>
+      <label for="editLongitude">Vĩ độ:</label>
+      <input type="text" id="editLongitude" name="lng" readonly><br><br>
+
+        <label for="editPicture">Hình ảnh:</label>
+        <div style="display: flex; align-items: center; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">
+            <input type="file" id="editPicture" name="hinhAnhCH" accept="image/*" style="width: 86px; border: none; outline: none;">
+            <input type="text" id="tenPic" name="oldPic" style="margin-left: 10px; width: 300px; border: none; outline: none;" readonly>
         </div>
-    </div>
-</div> --}}
+
+
+
+      <label for="editDescription">Mô tả:</label>
+      <input type="text" id="editDescription" name="mota"><br><br>
+      <button type="submit" id="saveEdit">Lưu thay đổi</button>
+    </form>
+  </div>
+</div>
 
 
 <style>
 /* General Modal Styles */
+
+/* Modal chỉnh sửa */
+#editModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+#editModal .modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+  border-radius: 10px;
+}
+
+.closeEdit {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeEdit:hover,
+.closeEdit:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -197,6 +228,44 @@
     .modal-content {
         width: 80%;
     }
+}
+#saveLocation {
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* White text color */
+    padding: 10px 15px; /* Top/bottom and left/right padding */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+}
+
+#saveLocation:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+#saveLocation:active {
+    transform: scale(0.95); /* Slightly shrink the button when clicked */
+}
+#saveEdit {
+    background-color: #4CAF50; /* Màu nền xanh lá */
+    color: white; /* Màu chữ trắng */
+    padding: 10px 15px; /* Khoảng cách trên/dưới và trái/phải */
+    border: none; /* Không có viền */
+    border-radius: 5px; /* Góc bo tròn */
+    font-size: 16px; /* Cỡ chữ */
+    cursor: pointer; /* Con trỏ hình bàn tay khi rê chuột */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Hiệu ứng chuyển động mượt */
+}
+
+#saveEdit:hover {
+    background-color: #45a049; /* Màu xanh lá đậm hơn khi rê chuột */
+    transform: scale(1.05); /* Phóng to nhẹ khi rê chuột */
+}
+
+#saveEdit:active {
+    transform: scale(0.95); /* Thu nhỏ nhẹ khi bấm vào */
 }
 
 </style>

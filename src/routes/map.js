@@ -3,6 +3,7 @@ const router = express.Router()
 const mapControllers = require('../app/controllers/MapControllers')
 
 router.get('/delete', mapControllers.deleteMarker)
+router.post('/update', mapControllers.updateMarker)
 router.post('/addmarker', mapControllers.addMarker)
 router.use('/', mapControllers.index)
 
